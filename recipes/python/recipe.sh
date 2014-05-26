@@ -92,6 +92,13 @@ function build_python() {
 		export LDFLAGS="$LDFLAGS -L$SRC_PATH/obj/local/$ARCH/"
 	fi
 
+	# needed to allow ctypes build (libffi: don't compile mallinfo to avoid mismatches with ndk .../arch-arm/usr/include/malloc.h)
+    export CFLAGS="$CFLAGS -DNO_MALLINFO=1"
+
+	# HOSTARCH and BUILDARCH defined in env.sh
+	#export HOSTARCH=arm-linux 
+	#export BUILDARCH=i386-linux-gnu
+
 	try ./configure --host=arm-eabi OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
 	echo ./configure --host=arm-eabi  OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
 	echo $MAKE HOSTPYTHON=$BUILD_python/hostpython HOSTPGEN=$BUILD_python/hostpgen CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
